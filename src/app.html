@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="text-scale" content="scale" />
+		%sveltekit.head%
+		<script>
+			// Decide on the logo intro before first paint so the hero never flashes up first.
+			// Plays once per session, only when the visit starts at the top of the home page
+			// (not on a #section link), and never with reduced motion.
+			(function () {
+				var root = document.documentElement;
+				root.classList.add('js');
+				try {
+					var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+					if (
+						location.pathname === '/' &&
+						!location.hash &&
+						!sessionStorage.getItem('zs-intro') &&
+						!reduce
+					) {
+						root.dataset.intro = 'play';
+					}
+				} catch (e) {}
+			})();
+		</script>
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">%sveltekit.body%</div>
+	</body>
+</html>
