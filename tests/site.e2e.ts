@@ -226,3 +226,30 @@ test.describe('project detail with motion', () => {
 		expect(await html.evaluate((el) => el.style.overflow)).toBe('');
 	});
 });
+
+test.describe('seo', () => {
+	test('has search and link-preview metadata', async ({ page, request }) => {
+		await page.goto('/');
+		await expect(page).toHaveTitle('Ziya Sharifli — Mobile & web developer');
+		await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+			'href',
+			'https://ziyasharifli.dev/'
+		);
+		await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /.{50,}/);
+		await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+			'content',
+			'https://ziyasharifli.dev/og-image.png'
+		);
+		const ld = JSON.parse(
+			(await page.locator('script[type="application/ld+json"]').textContent()) ?? ''
+		);
+		expect(ld['@graph'].map((n: { '@type': string }) => n['@type'])).toEqual(['WebSite', 'Person']);
+
+		expect((await request.get('/og-image.png')).ok()).toBe(true);
+		const sitemap = await request.get('/sitemap.xml');
+		expect(await sitemap.text()).toContain('<loc>https://ziyasharifli.dev/</loc>');
+		expect(await (await request.get('/robots.txt')).text()).toContain(
+			'Sitemap: https://ziyasharifli.dev/sitemap.xml'
+		);
+	});
+});

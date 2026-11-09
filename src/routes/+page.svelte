@@ -7,6 +7,16 @@
 	import IntroLogo from '#lib/components/IntroLogo.svelte';
 	import Orbits from '#lib/components/Orbits.svelte';
 	import { scrollVars } from '#lib/motion.js';
+	import {
+		email,
+		github,
+		instagram,
+		ogImage,
+		siteDescription,
+		siteName,
+		siteTitle,
+		siteUrl
+	} from '#lib/site.js';
 
 	// One page: the nav glides to each section.
 	const links = [
@@ -14,14 +24,72 @@
 		{ href: '#projects', label: 'Projects' },
 		{ href: '#contact', label: 'Contact' }
 	];
+
+	const pageUrl = `${siteUrl}/`;
+	const imageUrl = `${siteUrl}${ogImage.path}`;
+
+	// Structured data so search engines can show the site as a person, not just a page.
+	const jsonLd = {
+		'@context': 'https://schema.org',
+		'@graph': [
+			{
+				'@type': 'WebSite',
+				'@id': `${pageUrl}#website`,
+				url: pageUrl,
+				name: siteName,
+				inLanguage: 'en'
+			},
+			{
+				'@type': 'Person',
+				'@id': `${pageUrl}#person`,
+				name: siteName,
+				url: pageUrl,
+				image: imageUrl,
+				jobTitle: 'Mobile & web developer',
+				email: `mailto:${email}`,
+				homeLocation: { '@type': 'Place', name: 'Budapest, Hungary' },
+				alumniOf: { '@type': 'CollegeOrUniversity', name: 'Dokuz Eylul University' },
+				affiliation: { '@type': 'CollegeOrUniversity', name: 'Corvinus University of Budapest' },
+				knowsLanguage: ['az', 'tr', 'en', 'ru'],
+				sameAs: [github, instagram]
+			}
+		]
+	};
+	// `<` is escaped so no string in the data can close the tag early. The closing tag is split
+	// so it doesn't end this component's own <script> block.
+	const jsonLdTag =
+		'<script type="application/ld+json">' +
+		JSON.stringify(jsonLd).replace(/</g, '\\u003c') +
+		'</' +
+		'script>';
 </script>
 
 <svelte:head>
-	<title>Ziya Sharifli — Mobile & web developer</title>
-	<meta
-		name="description"
-		content="Ziya Sharifli designs and builds polished mobile and web apps that feel as good as they look."
-	/>
+	<title>{siteTitle}</title>
+	<meta name="description" content={siteDescription} />
+	<link rel="canonical" href={pageUrl} />
+	<meta name="author" content={siteName} />
+
+	<meta property="og:type" content="profile" />
+	<meta property="og:site_name" content={siteName} />
+	<meta property="og:title" content={siteTitle} />
+	<meta property="og:description" content={siteDescription} />
+	<meta property="og:url" content={pageUrl} />
+	<meta property="og:locale" content="en_US" />
+	<meta property="og:image" content={imageUrl} />
+	<meta property="og:image:width" content={String(ogImage.width)} />
+	<meta property="og:image:height" content={String(ogImage.height)} />
+	<meta property="og:image:alt" content={ogImage.alt} />
+	<meta property="profile:first_name" content="Ziya" />
+	<meta property="profile:last_name" content="Sharifli" />
+
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content={siteTitle} />
+	<meta name="twitter:description" content={siteDescription} />
+	<meta name="twitter:image" content={imageUrl} />
+	<meta name="twitter:image:alt" content={ogImage.alt} />
+
+	{@html jsonLdTag}
 </svelte:head>
 
 <main>
