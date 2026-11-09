@@ -1,6 +1,9 @@
 <div align="center">
 
-<img src=".github/readme/logo.svg" width="112" alt="ZS logo" />
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/readme/logo-dark.svg" />
+  <img src=".github/readme/logo.svg" width="112" alt="ZS logo" />
+</picture>
 
 # ziyasharifli.dev
 
