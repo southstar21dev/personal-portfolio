@@ -40,8 +40,13 @@ html {
 	-webkit-text-size-adjust: 100%;
 	/* Nav links glide to their section (Lenis takes over when JS runs, see motion.ts) */
 	scroll-behavior: smooth;
-	/* Always reserve the scrollbar's space, so locking scroll during the intro can't shift the layout */
-	scrollbar-gutter: stable;
+	/* No visible scrollbar (scrolling still works). With no bar there is no gutter either, so
+	   locking scroll during the intro or a project sheet can't shift the layout. */
+	scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+	display: none;
 }
 
 /* Lenis animates the scroll itself; native smoothing on top would fight it */

@@ -215,7 +215,13 @@
 		background: transparent;
 		overflow-y: auto;
 		overscroll-behavior: contain;
+		/* Scrolls like the page: no visible scrollbar */
+		scrollbar-width: none;
 		color: var(--ink);
+	}
+
+	.detail::-webkit-scrollbar {
+		display: none;
 	}
 
 	.detail::backdrop {
