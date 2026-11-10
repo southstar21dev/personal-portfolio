@@ -103,101 +103,105 @@
 >
 	{#if shown}
 		{@const p = shown}
-		{#key p.slug}
-			<article class="sheet">
-				<div class="ghost-word watermark" aria-hidden="true">
-					{p.name.split(' ')[0].toUpperCase()}
-				</div>
-
-				<div class="inner">
-					<div class="bar">
-						<button class="ctl back" type="button" onclick={onclose}>
-							<span aria-hidden="true">←</span> All projects
-						</button>
-						<div class="ctls">
-							<span class="pos">{pad(index + 1)} / {pad(projects.length)}</span>
-							<button
-								class="ctl"
-								type="button"
-								aria-label="Previous project: {prev.name}"
-								onclick={() => onnavigate(prev.slug)}
-							>
-								<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
-							</button>
-							<button
-								class="ctl"
-								type="button"
-								aria-label="Next project: {next.name}"
-								onclick={() => onnavigate(next.slug)}
-							>
-								<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
-							</button>
-							<button class="ctl" type="button" aria-label="Close" onclick={onclose}>
-								<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
-							</button>
-						</div>
+		<!-- The sheet stays put while flipping between projects; only its contents swap. -->
+		<article class="sheet">
+			{#key p.slug}
+				<div class="page">
+					<div class="ghost-word watermark" aria-hidden="true">
+						{p.name.split(' ')[0].toUpperCase()}
 					</div>
 
-					<header class="hero">
-						<div class="words">
-							<img
-								class="app-icon img-fade"
-								src={icons[p.slug]}
-								alt=""
-								width="72"
-								height="72"
-								use:imageLoading
-							/>
-							<h2 id="detail-title" class="display">{p.name.toUpperCase()}</h2>
-							<p class="meta">
-								<span>{p.platform}</span>
-								<span class="status" class:shipped={p.status === 'Shipped'}>{p.status}</span>
-							</p>
-							<p class="tagline">{p.summary}</p>
-							<p class="about">{p.about}</p>
-							<div class="links">
-								{#each p.links as link (link.href)}
-									<a class="out" href={link.href} target="_blank" rel="noopener noreferrer">
-										{link.label} <span aria-hidden="true">↗</span>
-									</a>
-								{/each}
+					<div class="inner">
+						<div class="bar">
+							<button class="ctl back" type="button" onclick={onclose}>
+								<span aria-hidden="true">←</span> All projects
+							</button>
+							<div class="ctls">
+								<span class="pos">{pad(index + 1)} / {pad(projects.length)}</span>
+								<button
+									class="ctl"
+									type="button"
+									aria-label="Previous project: {prev.name}"
+									onclick={() => onnavigate(prev.slug)}
+								>
+									<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+								</button>
+								<button
+									class="ctl"
+									type="button"
+									aria-label="Next project: {next.name}"
+									onclick={() => onnavigate(next.slug)}
+								>
+									<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+								</button>
+								<button class="ctl" type="button" aria-label="Close" onclick={onclose}>
+									<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg
+									>
+								</button>
 							</div>
 						</div>
 
-						<HeroFan project={p} />
-					</header>
-
-					<section class="block" aria-labelledby="detail-screens">
-						<h3 id="detail-screens" class="display">SCREENS</h3>
-						{#each p.screens as group (group.label)}
-							<ScreenStrip slug={p.slug} name={p.name} {group} />
-						{/each}
-					</section>
-
-					<section class="block" aria-labelledby="detail-features">
-						<h3 id="detail-features" class="display">WHAT IT DOES</h3>
-						<div class="features">
-							{#each p.features as feature, i (feature.title)}
-								<div class="feature">
-									<span class="num" aria-hidden="true">{pad(i + 1)}</span>
-									<div>
-										<h4>{feature.title}</h4>
-										<p>{feature.text}</p>
-									</div>
+						<header class="hero">
+							<div class="words">
+								<img
+									class="app-icon img-fade"
+									src={icons[p.slug]}
+									alt=""
+									width="72"
+									height="72"
+									use:imageLoading
+								/>
+								<h2 id="detail-title" class="display">{p.name.toUpperCase()}</h2>
+								<p class="meta">
+									<span>{p.platform}</span>
+									<span class="status" class:shipped={p.status === 'Shipped'}>{p.status}</span>
+								</p>
+								<p class="tagline">{p.summary}</p>
+								<p class="about">{p.about}</p>
+								<div class="links">
+									{#each p.links as link (link.href)}
+										<a class="out" href={link.href} target="_blank" rel="noopener noreferrer">
+											{link.label} <span aria-hidden="true">↗</span>
+										</a>
+									{/each}
 								</div>
+							</div>
+
+							<HeroFan project={p} />
+						</header>
+
+						<section class="block" aria-labelledby="detail-screens">
+							<h3 id="detail-screens" class="display">SCREENS</h3>
+							{#each p.screens as group (group.label)}
+								<ScreenStrip slug={p.slug} name={p.name} {group} />
 							{/each}
-						</div>
-					</section>
+						</section>
 
-					<section class="block stack" aria-labelledby="detail-stack">
-						<h3 id="detail-stack" class="display">BUILT WITH</h3>
-						<p>{p.stack.join(' · ')}</p>
-					</section>
+						<section class="block" aria-labelledby="detail-features">
+							<h3 id="detail-features" class="display">WHAT IT DOES</h3>
+							<div class="features">
+								{#each p.features as feature, i (feature.title)}
+									<div class="feature">
+										<span class="num" aria-hidden="true">{pad(i + 1)}</span>
+										<div>
+											<h4>{feature.title}</h4>
+											<p>{feature.text}</p>
+										</div>
+									</div>
+								{/each}
+							</div>
+						</section>
 
-					<ProjectPager {prev} {next} {onnavigate} />
+						<section class="block stack" aria-labelledby="detail-stack">
+							<h3 id="detail-stack" class="display">BUILT WITH</h3>
+							<p>{p.stack.join(' · ')}</p>
+						</section>
+
+						<ProjectPager {prev} {next} {onnavigate} />
+					</div>
 				</div>
-			</article>
-		{/key}
+			{/key}
+		</article>
 	{/if}
 </dialog>
 
@@ -254,6 +258,11 @@
 
 	.closing .sheet {
 		animation: sheet-out var(--close-ms) var(--ease-in-out) both;
+	}
+
+	/* A project's contents. Opacity only: a transform here would capture the absolutely placed watermark. */
+	.page {
+		animation: fade-in 0.35s ease both;
 	}
 
 	.watermark {

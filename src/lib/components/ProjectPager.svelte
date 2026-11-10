@@ -113,6 +113,9 @@
 
 	.turn-name {
 		min-width: 0;
+		/* Two-word names stack a word per line, and the box hugs them. Left to wrap on its own, the
+		   box keeps the full width it was offered, which strands the icon away from the name. */
+		width: min-content;
 		font-size: clamp(40px, 5.4vw, 92px);
 		/* follows the button's hover colour */
 		color: inherit;
